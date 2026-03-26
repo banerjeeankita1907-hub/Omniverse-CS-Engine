@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ OMNIVERSE CS ENGINE — Created By Ankita Banerjee</title>
+<style>
+  :root {
+    --neon-cyan: #00ffff;
+    --neon-purple: #bf00ff;
+    --neon-green: #00ff88;
+    --neon-orange: #ff6600;
+    --neon-pink: #ff00aa;
+    --neon-yellow: #ffff00;
+    --dark-bg: #020408;
+    --card-bg: #060d18;
+    --card-border: #0a1628;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--dark-bg);
+    color: #e0e8ff;
+    font-family: 'Courier New', monospace;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #matrix-bg {
+    position: absolute; inset: 0;
+    z-index: 0;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink), var(--neon-green), var(--neon-cyan));
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradShift 4s linear infinite;
+    text-shadow: none;
+    letter-spacing: -2px;
+  }
+  @keyframes gradShift {
+    0%{background-position:0%} 100%{background-position:300%}
+  }
+  .hero-sub {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: var(--neon-cyan);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 2.5rem;
+    justify-content: center; flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 2.5rem; font-weight: 900;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green);
+  }
+  .stat-label { font-size: .75rem; color: #6080a0; letter-spacing: 3px; }
+  .scroll-hint {
+    position: absolute; bottom: 2rem;
+    font-size: .85rem; color: var(--neon-cyan);
+    animation: bounce 2s ease-in-out infinite;
+    z-index: 2;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(2,4,8,.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #0a2040;
+    display: flex; overflow-x: auto; gap: .5rem;
+    padding: .7rem 1rem;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid #0a2040;
+    color: #6080a0;
+    padding: .4rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: .8rem;
+    transition: all .3s;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: rgba(0,255,255,.07);
+    box-shadow: 0 0 12px rgba(0,255,255,.2);
+  }
+
+  /* ── SECTIONS ── */
+  .module {
+    display: none;
+    padding: 2rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn .4s ease;
+  }
+  .module.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .module-title {
+    font-size: 2rem; font-weight: 900;
+    margin-bottom: .5rem;
+  }
+  .module-desc {
+    color: #4a6080; font-size: .9rem;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  }
+  .card h3 {
+    font-size: 1rem; color: var(--neon-cyan);
+    margin-bottom: 1rem; letter-spacing: 2px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: var(--neon-cyan);
+    padding: .5rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .85rem;
+    transition: all .3s;
+    margin: .3rem;
+  }
+  .btn:hover {
+    background: rgba(0,255,255,.1);
+    box-shadow: 0 0 15px rgba(0,255,255,.3);
+  }
+  .btn.green { color: var(--neon-green); border-color: var(--neon-green); }
+  .btn.green:hover { background: rgba(0,255,136,.1); box-shadow: 0 0 15px rgba(0,255,136,.3); }
+  .btn.purple { color: var(--neon-purple); border-color: var(--neon-purple); }
+  .btn.orange { color: var(--neon-orange); border-color: var(--neon-orange); }
+  .btn.pink { color: var(--neon-pink); border-color: var(--neon-pink); }
+  .btn.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); }
+
+  input[type=range] {
+    -webkit-appearance:none; width:100%; height:4px;
+    background: #0a2040; border-radius:4px; outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none; width:16px; height:16px;
+    border-radius:50%; background: var(--neon-cyan);
+    cursor:pointer; box-shadow: 0 0 8px var(--neon-cyan);
+  }
+  input[type=text], input[type=number], select, textarea {
+    background: #030810;
+    border: 1px solid #0a2040;
+    color: var(--neon-green);
+    padding: .5rem .8rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: .9rem;
+    outline: none;
+    transition: border-color .3s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 8px rgba(0,255,255,.2);
+  }
+
+  /* ─── 1. SORTING ─── */
+  #sort-bars {
+    display: flex; align-items: flex-end;
+    height: 220px; gap: 2px;
+    background: #020810; border-radius: 8px;
+    padding: .5rem; overflow: hidden;
+  }
+  .bar {
+    flex: 1; border-radius: 3px 3px 0 0;
+    background: linear-gradient(to top, var(--neon-cyan), var(--neon-purple));
+    transition: height .05s ease;
+    min-width: 2px;
+  }
+  .bar.comparing { background: linear-gradient(to top, var(--neon-orange), #ff3300); }
+  .bar.sorted { background: linear-gradient(to top, var(--neon-green), #00cc66); }
+  .sort-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 1rem; }
+  .sort-info { color: #4a6080; font-size: .8rem; margin-top: .5rem; }
+  #sort-speed-label { color: var(--neon-cyan); font-size: .85rem; }
+
+  /* ─── 2. PATHFINDING ─── */
+  #path-grid-wrap {
+    overflow: auto; border-radius: 8px;
+    background: #020810; padding: .5rem;
+    border: 1px solid #0a2040;
+  }
+  #path-grid {
+    display: grid;
+    gap: 1px;
+  }
+  .cell {
+    width: 24px; height: 24px;
+    border-radius: 2px;
+    background: #0a1628;
+    cursor: pointer;
+    transition: background .1s;
+  }
+  .cell.wall { background: #1a3060; }
+  .cell.start { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+  .cell.end { background: var(--neon-pink); box-shadow: 0 0 8px var(--neon-pink); }
+  .cell.open { background: rgba(0,255,255,.25); }
+  .cell.closed { background: rgba(191,0,255,.2); }
+  .cell.path { background: var(--neon-yellow); box-shadow: 0 0 6px var(--neon-yellow); animation: pathAnim .3s; }
+  @keyframes pathAnim { from{transform:scale(.5)} to{transform:scale(1)} }
+  .path-legend { display:flex; flex-wrap:wrap; gap:1rem; margin-top:.8rem; font-size:.8rem; color:#6080a0; }
+  .legend-dot { width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:.3rem;vertical-align:middle; }
+
+  /* ─── 3. NEURAL NET ─── */
+  #nn-canvas { width:100%; border-radius:8px; background:#020810; display:block; }
+
+  /* ─── 4. FRACTAL ─── */
+  #fractal-canvas {
+    width: 100%; border-radius: 8px;
+    cursor: crosshair;
+    display: block;
+  }
+  .fractal-controls { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:1rem; }
+
+  /* ─── 5. CRYPTO ─── */
+  .crypto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width:600px){ .crypto-grid{ grid-template-columns:1fr; } }
+  .crypto-input, .crypto-output {
+    width:100%; height:80px; resize:vertical;
+    background:#030810; border:1px solid #0a2040;
+    color:var(--neon-green); padding:.7rem;
+    border-radius:6px; font-family:inherit; font-size:.85rem;
+  }
+  .crypto-output { color: var(--neon-cyan); border-color: #0a2040; cursor: default; }
+
+  /* ─── 6. BIG-O ─── */
+  #bigo-canvas { width:100%; border-radius:8px; background:#020810; display:block; }
+  .complexity-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+    gap: 1rem; margin-top: 1rem;
+  }
+  .complexity-card {
+    background: #030810; border: 1px solid #0a2040;
+    border-radius: 8px; padding: 1rem;
+    text-align: center;
+  }
+  .complexity-class { font-size: 1.5rem; font-weight: 900; }
+  .complexity-name { font-size: .75rem; color: #4a6080; margin-top: .2rem; }
+  .complexity-ex { font-size: .7rem; color: #2a4060; margin-top: .4rem; }
+
+  /* ─── 7. PARTICLES ─── */
+  #particle-canvas { width:100%; border-radius:8px; cursor:crosshair; display:block; }
+  .particle-controls { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; align-items:center; }
+
+  /* ─── 8. DATA STRUCTURES ─── */
+  #ds-canvas { width:100%; border-radius:8px; background:#020810; display:block; }
+  .ds-controls { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; align-items:center; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align:center; padding:3rem 1rem;
+    border-top:1px solid #0a2040;
+    color:#1a3050; font-size:.8rem;
+    letter-spacing:2px;
+  }
+  footer span { color: var(--neon-cyan); }
+
+  /* Glow text helpers */
+  .glow-cyan { color:var(--neon-cyan); text-shadow:0 0 10px var(--neon-cyan); }
+  .glow-green { color:var(--neon-green); text-shadow:0 0 10px var(--neon-green); }
+  .glow-purple { color:var(--neon-purple); text-shadow:0 0 10px var(--neon-purple); }
+  .glow-pink { color:var(--neon-pink); text-shadow:0 0 10px var(--neon-pink); }
+  .glow-orange { color:var(--neon-orange); text-shadow:0 0 10px var(--neon-orange); }
+
+  .tag {
+    display:inline-block; padding:.15rem .5rem;
+    border-radius:4px; font-size:.7rem;
+    background:rgba(0,255,255,.08);
+    color:var(--neon-cyan); border:1px solid rgba(0,255,255,.2);
+    margin:.2rem;
+  }
+
+  /* progress bar */
+  .progress-bar-wrap { background:#020810; border-radius:4px; height:6px; margin:.5rem 0; overflow:hidden; }
+  .progress-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--neon-cyan),var(--neon-purple)); transition:width .3s; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+  @media(max-width:700px){ .two-col{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <canvas id="matrix-bg"></canvas>
+  <div class="hero-content">
+    <div class="hero-title">OMNIVERSE CS ENGINE</div>
+    <div class="hero-sub">Created By Ankita Banerjee</div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="cnt-algo">0</div><div class="stat-label">Algorithms</div></div>
+      <div class="stat"><div class="stat-num" id="cnt-ds">0</div><div class="stat-label">Data Structures</div></div>
+      <div class="stat"><div class="stat-num" id="cnt-lines">0</div><div class="stat-label">Lines of Code</div></div>
+      <div class="stat"><div class="stat-num" id="cnt-ops">0</div><div class="stat-label">Operations/sec</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ SCROLL TO EXPLORE ▼</div>
+</section>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav id="main-nav">
+  <button class="nav-btn active" onclick="showModule('sort')">⚡ Sorting Arena</button>
+  <button class="nav-btn" onclick="showModule('path')">🗺️ A* Pathfinding</button>
+  <button class="nav-btn" onclick="showModule('neural')">🧠 Neural Network</button>
+  <button class="nav-btn" onclick="showModule('fractal')">🌀 Fractal Explorer</button>
+  <button class="nav-btn" onclick="showModule('crypto')">🔐 Crypto Lab</button>
+  <button class="nav-btn" onclick="showModule('bigo')">📊 Big-O Analyzer</button>
+  <button class="nav-btn" onclick="showModule('particles')">⚛️ Particle Physics</button>
+  <button class="nav-btn" onclick="showModule('ds')">🌲 Data Structures</button>
+</nav>
+
+<!-- ══════════════ MODULES ══════════════ -->
+
+<!-- 1. SORTING -->
+<div class="module active" id="module-sort">
+  <div class="module-title glow-cyan">⚡ Sorting Algorithm Arena</div>
+  <div class="module-desc">VISUALIZE • COMPARE • UNDERSTAND — Real-time animated sorting with live statistics</div>
+  <div class="card">
+    <h3>▶ VISUALIZATION ENGINE</h3>
+    <div id="sort-bars"></div>
+    <div class="sort-controls">
+      <button class="btn" onclick="sortGenArray()">🎲 Randomize</button>
+      <button class="btn green" onclick="startSort('bubble')">Bubble Sort</button>
+      <button class="btn purple" onclick="startSort('selection')">Selection Sort</button>
+      <button class="btn" onclick="startSort('insertion')">Insertion Sort</button>
+      <button class="btn orange" onclick="startSort('merge')">Merge Sort</button>
+      <button class="btn pink" onclick="startSort('quick')">Quick Sort</button>
+      <button class="btn yellow" onclick="startSort('heap')">Heap Sort</button>
+      <button class="btn" style="color:#f00;border-color:#f00" onclick="stopSort()">■ STOP</button>
+    </div>
+    <div class="sort-controls" style="margin-top:.8rem">
+      <label style="color:#4a6080;font-size:.8rem">Bars: <span id="bar-count-label">80</span></label>
+      <input type="range" min="10" max="200" value="80" id="bar-count" oninput="document.getElementById('bar-count-label').textContent=this.value;sortGenArray()" style="width:130px">
+      <label style="color:#4a6080;font-size:.8rem;margin-left:.5rem">Speed:</label>
+      <input type="range" min="1" max="100" value="50" id="sort-speed" style="width:130px">
+    </div>
+    <div class="sort-info" id="sort-info">Select an algorithm above to begin visualization. Each bar represents an array element.</div>
+    <div style="display:flex;gap:2rem;margin-top:.8rem;flex-wrap:wrap">
+      <div style="font-size:.85rem">Comparisons: <span class="glow-cyan" id="sort-comps">0</span></div>
+      <div style="font-size:.85rem">Swaps: <span class="glow-green" id="sort-swaps">0</span></div>
+      <div style="font-size:.85rem">Time: <span class="glow-orange" id="sort-time">0ms</span></div>
+    </div>
+  </div>
+  <div class="complexity-grid">
+    <div class="complexity-card">
+      <div class="complexity-class glow-green">O(n log n)</div>
+      <div class="complexity-name">MERGE / HEAP</div>
+      <div class="complexity-ex">Best case guaranteed</div>
+    </div>
+    <div class="complexity-card">
+      <div class="complexity-class glow-cyan">O(n log n)*</div>
+      <div class="complexity-name">QUICK SORT</div>
+      <div class="complexity-ex">Avg. O(n log n), worst O(n²)</div>
+    </div>
+    <div class="complexity-card">
+      <div class="complexity-class glow-orange">O(n²)</div>
+      <div class="complexity-name">BUBBLE / SELECT</div>
+      <div class="complexity-ex">Simple but slow for large n</div>
+    </div>
+    <div class="complexity-card">
+      <div class="complexity-class glow-purple">O(n)</div>
+      <div class="complexity-name">INSERTION (best)</div>
+      <div class="complexity-ex">Best on nearly sorted data</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. PATHFINDING -->
+<div class="module" id="module-path">
+  <div class="module-title glow-green">🗺️ A* Pathfinding Engine</div>
+  <div class="module-desc">DRAW WALLS • SET GOALS • WATCH AI NAVIGATE — Heuristic-guided pathfinding in real-time</div>
+  <div class="card">
+    <h3>▶ INTERACTIVE GRID</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;align-items:center">
+      <button class="btn green" id="path-mode-start" onclick="setPathMode('start')">📍 Set Start</button>
+      <button class="btn pink" id="path-mode-end" onclick="setPathMode('end')">🏁 Set End</button>
+      <button class="btn" id="path-mode-wall" onclick="setPathMode('wall')">🧱 Draw Wall</button>
+      <button class="btn" id="path-mode-erase" onclick="setPathMode('erase')">🧹 Erase</button>
+      <button class="btn orange" onclick="pathMaze()">🌀 Generate Maze</button>
+      <button class="btn purple" onclick="runAStar()">▶ Run A*</button>
+      <button class="btn" style="color:#f00;border-color:#f00" onclick="clearPath()">✕ Clear</button>
+    </div>
+    <div id="path-grid-wrap"><div id="path-grid"></div></div>
+    <div class="path-legend">
+      <span><span class="legend-dot" style="background:var(--neon-green)"></span>Start</span>
+      <span><span class="legend-dot" style="background:var(--neon-pink)"></span>End</span>
+      <span><span class="legend-dot" style="background:#1a3060"></span>Wall</span>
+      <span><span class="legend-dot" style="background:rgba(0,255,255,.35)"></span>Open Set</span>
+      <span><span class="legend-dot" style="background:rgba(191,0,255,.3)"></span>Closed Set</span>
+      <span><span class="legend-dot" style="background:var(--neon-yellow)"></span>Optimal Path</span>
+    </div>
+    <div style="margin-top:.8rem;font-size:.85rem;color:#4a6080" id="path-info">
+      Mode: <span class="glow-cyan" id="path-mode-label">WALL</span> &nbsp;|&nbsp;
+      Nodes explored: <span class="glow-green" id="path-nodes">0</span> &nbsp;|&nbsp;
+      Path length: <span class="glow-yellow" id="path-len" style="color:var(--neon-yellow)">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- 3. NEURAL NETWORK -->
+<div class="module" id="module-neural">
+  <div class="module-title glow-purple">🧠 Neural Network Visualizer</div>
+  <div class="module-desc">LIVE FORWARD PASS • WEIGHT VISUALIZATION • ACTIVATION FUNCTIONS</div>
+  <div class="card">
+    <h3>▶ NETWORK ARCHITECTURE</h3>
+    <canvas id="nn-canvas" height="380"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;align-items:center">
+      <button class="btn purple" onclick="nnForwardPass()">▶ Forward Pass</button>
+      <button class="btn" onclick="nnRandomWeights()">🎲 Random Weights</button>
+      <button class="btn green" onclick="nnAddLayer()">+ Layer</button>
+      <button class="btn orange" onclick="nnRemoveLayer()">− Layer</button>
+      <button class="btn pink" onclick="nnAnimate()">⚡ Auto Fire</button>
+    </div>
+    <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:1.5rem; font-size:.85rem">
+      <span>Architecture: <span class="glow-cyan" id="nn-arch">—</span></span>
+      <span>Parameters: <span class="glow-green" id="nn-params">—</span></span>
+      <span>Loss: <span class="glow-orange" id="nn-loss">—</span></span>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h3>ACTIVATION FUNCTIONS</h3>
+      <canvas id="activation-canvas" height="160" style="width:100%;border-radius:6px;background:#020810;display:block"></canvas>
+      <div style="display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap">
+        <button class="btn" onclick="drawActivation('relu')" style="font-size:.75rem">ReLU</button>
+        <button class="btn purple" onclick="drawActivation('sigmoid')" style="font-size:.75rem">Sigmoid</button>
+        <button class="btn green" onclick="drawActivation('tanh')" style="font-size:.75rem">tanh</button>
+        <button class="btn orange" onclick="drawActivation('leaky')" style="font-size:.75rem">Leaky ReLU</button>
+        <button class="btn pink" onclick="drawActivation('softmax')" style="font-size:.75rem">Softmax</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>LAYER TYPES</h3>
+      <div style="font-size:.8rem;line-height:2">
+        <div><span class="tag">Dense</span> Fully connected — all neurons linked</div>
+        <div><span class="tag">Conv2D</span> Feature maps via sliding filters</div>
+        <div><span class="tag">LSTM</span> Long short-term memory cells</div>
+        <div><span class="tag">Dropout</span> Regularization — random deactivation</div>
+        <div><span class="tag">BatchNorm</span> Normalize activations per batch</div>
+        <div><span class="tag">Softmax</span> Multi-class probability output</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. FRACTAL -->
+<div class="module" id="module-fractal">
+  <div class="module-title glow-pink">🌀 Fractal Explorer</div>
+  <div class="module-desc">MANDELBROT & JULIA SETS — Infinite zoom into mathematical beauty</div>
+  <div class="card">
+    <h3>▶ INTERACTIVE CANVAS — Click to zoom in, Right-click to zoom out</h3>
+    <canvas id="fractal-canvas" height="450"></canvas>
+    <div class="fractal-controls">
+      <button class="btn pink" onclick="fractalType='mandelbrot';resetFractal()">Mandelbrot</button>
+      <button class="btn purple" onclick="fractalType='julia';resetFractal()">Julia Set</button>
+      <button class="btn green" onclick="fractalType='burning';resetFractal()">Burning Ship</button>
+      <button class="btn" onclick="resetFractal()">↺ Reset Zoom</button>
+      <label style="color:#4a6080;font-size:.8rem">Iterations: <span id="iter-label">100</span></label>
+      <input type="range" min="20" max="500" value="100" id="iter-slider" style="width:120px" oninput="document.getElementById('iter-label').textContent=this.value;renderFractal()">
+      <label style="color:#4a6080;font-size:.8rem">Palette:</label>
+      <select id="fractal-palette" onchange="renderFractal()" style="font-size:.8rem">
+        <option value="fire">🔥 Fire</option>
+        <option value="ocean">🌊 Ocean</option>
+        <option value="neon">⚡ Neon</option>
+        <option value="grayscale">◼ Grayscale</option>
+        <option value="psychedelic">🌈 Psychedelic</option>
+      </select>
+    </div>
+    <div style="font-size:.8rem;color:#4a6080;margin-top:.8rem">
+      Center: <span class="glow-cyan" id="fractal-center">(-0.5, 0)</span> &nbsp;|&nbsp;
+      Zoom: <span class="glow-green" id="fractal-zoom">1×</span> &nbsp;|&nbsp;
+      Type: <span class="glow-pink" id="fractal-type-label">Mandelbrot</span>
+    </div>
+  </div>
+</div>
+
+<!-- 5. CRYPTO -->
+<div class="module" id="module-crypto">
+  <div class="module-title glow-orange">🔐 Cryptography Laboratory</div>
+  <div class="module-desc">CLASSICAL CIPHERS • ENCODING • HASHING — Encode, decode, analyze</div>
+
+  <div class="card">
+    <h3>▶ CIPHER ENGINE</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;align-items:center">
+      <select id="cipher-type" onchange="cryptoProcess()" style="font-size:.85rem">
+        <option value="caesar">Caesar Cipher</option>
+        <option value="vigenere">Vigenère Cipher</option>
+        <option value="atbash">Atbash Cipher</option>
+        <option value="rot13">ROT13</option>
+        <option value="rail">Rail Fence</option>
+        <option value="b64">Base64</option>
+        <option value="bin">Binary</option>
+        <option value="hex">Hexadecimal</option>
+        <option value="morse">Morse Code</option>
+        <option value="reverse">Reverse</option>
+      </select>
+      <label style="color:#4a6080;font-size:.8rem">Shift/Key:</label>
+      <input type="text" id="cipher-key" value="3" oninput="cryptoProcess()" style="width:80px;font-size:.85rem">
+      <button class="btn orange" onclick="swapCipherIO()">⇄ Swap</button>
+      <button class="btn" onclick="cryptoCopyOutput()">📋 Copy</button>
+    </div>
+    <div class="crypto-grid">
+      <div>
+        <div style="font-size:.75rem;color:#4a6080;margin-bottom:.4rem">INPUT</div>
+        <textarea class="crypto-input" id="crypto-input" oninput="cryptoProcess()" placeholder="Type your message here...">Hello, World! This is the OMNIVERSE CS ENGINE.</textarea>
+      </div>
+      <div>
+        <div style="font-size:.75rem;color:#4a6080;margin-bottom:.4rem">OUTPUT</div>
+        <textarea class="crypto-output" id="crypto-output" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>FREQUENCY ANALYSIS</h3>
+      <canvas id="freq-canvas" height="160" style="width:100%;background:#020810;border-radius:6px;display:block"></canvas>
+      <div style="font-size:.75rem;color:#4a6080;margin-top:.5rem">Letter frequency distribution of input text</div>
+    </div>
+    <div class="card">
+      <h3>HASH FUNCTIONS</h3>
+      <input type="text" id="hash-input" placeholder="Text to hash..." oninput="updateHashes()" style="width:100%;margin-bottom:.8rem">
+      <div style="font-size:.8rem;line-height:2.2">
+        <div>DJB2: <span class="glow-cyan" id="h-djb2" style="font-size:.75rem;word-break:break-all">—</span></div>
+        <div>FNV1a: <span class="glow-green" id="h-fnv" style="font-size:.75rem;word-break:break-all">—</span></div>
+        <div>SDBM: <span class="glow-orange" id="h-sdbm" style="font-size:.75rem;word-break:break-all">—</span></div>
+        <div>Checksum: <span class="glow-pink" id="h-sum" style="font-size:.75rem;word-break:break-all">—</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. BIG-O -->
+<div class="module" id="module-bigo">
+  <div class="module-title glow-yellow" style="color:var(--neon-yellow)">📊 Big-O Complexity Analyzer</div>
+  <div class="module-desc">VISUALIZE GROWTH • COMPARE COMPLEXITIES — Understanding algorithmic efficiency</div>
+  <div class="card">
+    <h3>▶ GROWTH RATE CHART</h3>
+    <canvas id="bigo-canvas" height="380"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem">
+      <button class="btn" onclick="bigoToggle('O1')" id="btn-O1">O(1)</button>
+      <button class="btn green" onclick="bigoToggle('Ologn')" id="btn-Ologn">O(log n)</button>
+      <button class="btn" onclick="bigoToggle('On')" id="btn-On">O(n)</button>
+      <button class="btn purple" onclick="bigoToggle('Onlogn')" id="btn-Onlogn">O(n log n)</button>
+      <button class="btn orange" onclick="bigoToggle('On2')" id="btn-On2">O(n²)</button>
+      <button class="btn pink" onclick="bigoToggle('On3')" id="btn-On3">O(n³)</button>
+      <button class="btn yellow" onclick="bigoToggle('O2n')" id="btn-O2n" style="color:var(--neon-yellow);border-color:var(--neon-yellow)">O(2ⁿ)</button>
+      <button class="btn" onclick="bigoToggle('Onf')" id="btn-Onf" style="color:#ff4444;border-color:#ff4444">O(n!)</button>
+    </div>
+    <div style="font-size:.75rem;color:#4a6080;margin-top:.5rem">Click buttons to toggle visibility. Hover chart for values.</div>
+  </div>
+  <div class="complexity-grid">
+    <div class="complexity-card"><div class="complexity-class glow-green">O(1)</div><div class="complexity-name">CONSTANT</div><div class="complexity-ex">Array index, hash table lookup</div></div>
+    <div class="complexity-card"><div class="complexity-class glow-cyan">O(log n)</div><div class="complexity-name">LOGARITHMIC</div><div class="complexity-ex">Binary search, balanced BST</div></div>
+    <div class="complexity-card"><div class="complexity-class" style="color:#88aaff;text-shadow:0 0 10px #88aaff">O(n)</div><div class="complexity-name">LINEAR</div><div class="complexity-ex">Linear search, array traversal</div></div>
+    <div class="complexity-card"><div class="complexity-class glow-purple">O(n log n)</div><div class="complexity-name">LINEARITHMIC</div><div class="complexity-ex">Merge sort, heap sort</div></div>
+    <div class="complexity-card"><div class="complexity-class glow-orange">O(n²)</div><div class="complexity-name">QUADRATIC</div><div class="complexity-ex">Bubble sort, nested loops</div></div>
+    <div class="complexity-card"><div class="complexity-class glow-pink">O(2ⁿ)</div><div class="complexity-name">EXPONENTIAL</div><div class="complexity-ex">Fibonacci (naive), subsets</div></div>
+  </div>
+</div>
+
+<!-- 7. PARTICLES -->
+<div class="module" id="module-particles">
+  <div class="module-title glow-cyan">⚛️ Particle Physics Simulator</div>
+  <div class="module-desc">N-BODY SIMULATION • GRAVITY • COLLISION — Click to add particles</div>
+  <div class="card">
+    <h3>▶ PHYSICS ENGINE</h3>
+    <canvas id="particle-canvas" height="450"></canvas>
+    <div class="particle-controls">
+      <button class="btn" onclick="particleMode='attract';updateParticleMode()">🌌 Attract</button>
+      <button class="btn orange" onclick="particleMode='repel';updateParticleMode()">💥 Repel</button>
+      <button class="btn green" onclick="particleMode='orbit';updateParticleMode()">🌀 Orbit</button>
+      <button class="btn purple" onclick="particleMode='random';updateParticleMode()">🎲 Random</button>
+      <button class="btn pink" onclick="explodeParticles()">💥 EXPLODE</button>
+      <button class="btn" onclick="clearParticles()">✕ Clear</button>
+      <button class="btn yellow" onclick="addParticleBurst()" style="color:var(--neon-yellow);border-color:var(--neon-yellow)">✨ Burst</button>
+    </div>
+    <div class="particle-controls" style="margin-top:.5rem">
+      <label style="color:#4a6080;font-size:.8rem">Gravity: <span id="grav-label">0.5</span></label>
+      <input type="range" min="0" max="20" value="5" step="1" id="grav-slider" style="width:100px" oninput="gravStrength=this.value/10;document.getElementById('grav-label').textContent=(this.value/10).toFixed(1)">
+      <label style="color:#4a6080;font-size:.8rem;margin-left:.5rem">Friction: <span id="fric-label">0.99</span></label>
+      <input type="range" min="90" max="100" value="99" id="fric-slider" style="width:100px" oninput="friction=this.value/100;document.getElementById('fric-label').textContent=(this.value/100).toFixed(2)">
+    </div>
+    <div style="font-size:.85rem;color:#4a6080;margin-top:.8rem">
+      Particles: <span class="glow-cyan" id="particle-count">0</span> &nbsp;|&nbsp;
+      Mode: <span class="glow-green" id="particle-mode-label">attract</span> &nbsp;|&nbsp;
+      FPS: <span class="glow-orange" id="particle-fps">60</span>
+    </div>
+  </div>
+</div>
+
+<!-- 8. DATA STRUCTURES -->
+<div class="module" id="module-ds">
+  <div class="module-title glow-green">🌲 Data Structure Playground</div>
+  <div class="module-desc">BST • AVL • HEAP • LINKED LIST — Insert, delete, search — all visualized</div>
+  <div class="card">
+    <h3>▶ BINARY SEARCH TREE</h3>
+    <canvas id="ds-canvas" height="380"></canvas>
+    <div class="ds-controls">
+      <input type="number" id="ds-input" placeholder="Value" style="width:80px;font-size:.85rem" min="1" max="999">
+      <button class="btn green" onclick="dsInsert()">+ Insert</button>
+      <button class="btn orange" onclick="dsDelete()">− Delete</button>
+      <button class="btn purple" onclick="dsSearch()">🔍 Search</button>
+      <button class="btn" onclick="dsRandom()">🎲 Random</button>
+      <button class="btn" style="color:#f00;border-color:#f00" onclick="dsClear()">✕ Clear</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem">
+      <button class="btn" onclick="traversal='inorder';dsTraverse()" style="font-size:.75rem">In-order</button>
+      <button class="btn purple" onclick="traversal='preorder';dsTraverse()" style="font-size:.75rem">Pre-order</button>
+      <button class="btn pink" onclick="traversal='postorder';dsTraverse()" style="font-size:.75rem">Post-order</button>
+      <button class="btn green" onclick="traversal='bfs';dsTraverse()" style="font-size:.75rem">BFS</button>
+    </div>
+    <div style="font-size:.85rem;color:#4a6080;margin-top:.8rem">
+      Nodes: <span class="glow-cyan" id="ds-count">0</span> &nbsp;|&nbsp;
+      Height: <span class="glow-green" id="ds-height">0</span> &nbsp;|&nbsp;
+      Traversal: <span class="glow-purple" id="ds-traversal-out" style="word-break:break-all;max-width:400px;display:inline-block">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-size:1.5rem;margin-bottom:.5rem">🌌</div>
+  <div>OMNIVERSE CS ENGINE &nbsp;•&nbsp; <span>Created By Ankita Banerjee</span></div>
+  <div style="margin-top:.5rem">Built with pure HTML, CSS & JavaScript — zero dependencies</div>
+  <div style="margin-top:.3rem;color:#0a1828">∞ algorithms • ∞ possibilities • ∞ discovery</div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT — THE BRAIN
+══════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────
+// HERO MATRIX RAIN
+// ─────────────────────────────────────────
+(function(){
+  const c = document.getElementById('matrix-bg');
+  const ctx = c.getContext('2d');
+  function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+{}[]|<>?';
+  let cols = Math.floor(c.width/18);
+  let drops = Array(cols).fill(1);
+  setInterval(()=>{
+    cols = Math.floor(c.width/18);
+    if(drops.length < cols) drops = drops.concat(Array(cols-drops.length).fill(1));
+    ctx.fillStyle='rgba(2,4,8,0.05)';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.font='14px monospace';
+    for(let i=0;i<cols;i++){
+      const ch=chars[Math.floor(Math.random()*chars.length)];
+      const brightness = Math.random();
+      if(brightness > 0.95) ctx.fillStyle='#ffffff';
+      else if(brightness > 0.7) ctx.fillStyle='#00ff88';
+      else ctx.fillStyle='#003a18';
+      ctx.fillText(ch, i*18, drops[i]*18);
+      if(drops[i]*18 > c.height && Math.random()>0.975) drops[i]=0;
+      drops[i]++;
+    }
+  },50);
+})();
+
+// ─────────────────────────────────────────
+// HERO COUNTER ANIMATION
+// ─────────────────────────────────────────
+function animCounter(el, target, suffix=''){
+  let v=0; const step=Math.ceil(target/60);
+  const t=setInterval(()=>{
+    v=Math.min(v+step,target);
+    el.textContent=v+(suffix||'');
+    if(v>=target)clearInterval(t);
+  },30);
+}
+setTimeout(()=>{
+  animCounter(document.getElementById('cnt-algo'),47);
+  animCounter(document.getElementById('cnt-ds'),23);
+  animCounter(document.getElementById('cnt-lines'),2800);
+  animCounter(document.getElementById('cnt-ops'),0);
+  // ops counter keeps going
+  let ops=0;
+  setInterval(()=>{
+    ops=Math.floor(Math.random()*900000+100000);
+    document.getElementById('cnt-ops').textContent=ops.toLocaleString();
+  },200);
+},600);
+
+// ─────────────────────────────────────────
+// NAV / MODULE SWITCHING
+// ─────────────────────────────────────────
+function showModule(id){
+  document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+  document.getElementById('module-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  // init on first show
+  if(id==='path' && !pathInited) initPath();
+  if(id==='neural' && !nnInited) initNN();
+  if(id==='fractal' && !fractalInited) initFractal();
+  if(id==='bigo' && !bigoInited) initBigo();
+  if(id==='particles' && !particlesInited) initParticles();
+  if(id==='ds' && !dsInited) initDS();
+  if(id==='crypto') { cryptoProcess(); updateFreq(); }
+}
+
+// ─────────────────────────────────────────
+// 1. SORTING
+// ─────────────────────────────────────────
+let sortArray=[], sortRunning=false, sortStop=false;
+let sortComps=0, sortSwaps=0;
+
+function sortGenArray(){
+  const n=parseInt(document.getElementById('bar-count').value);
+  sortArray=Array.from({length:n},()=>Math.floor(Math.random()*200)+5);
+  renderBars(sortArray,[],[]);
+  document.getElementById('sort-comps').textContent='0';
+  document.getElementById('sort-swaps').textContent='0';
+  document.getElementById('sort-time').textContent='0ms';
+  document.getElementById('sort-info').textContent='Array randomized. Select an algorithm to visualize.';
+}
+sortGenArray();
+
+function renderBars(arr, comparing=[], sorted=[]){
+  const wrap=document.getElementById('sort-bars');
+  if(wrap.children.length !== arr.length){
+    wrap.innerHTML='';
+    arr.forEach(()=>{const d=document.createElement('div');d.className='bar';wrap.appendChild(d);});
+  }
+  const max=Math.max(...arr);
+  [...wrap.children].forEach((b,i)=>{
+    b.style.height=(arr[i]/max*96)+'%';
+    b.className='bar';
+    if(comparing.includes(i)) b.classList.add('comparing');
+    else if(sorted.includes(i)) b.classList.add('sorted');
+  });
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function getDelay(){ return Math.max(1, 101-parseInt(document.getElementById('sort-speed').value)); }
+
+async function startSort(algo){
+  if(sortRunning){ stopSort(); await sleep(200); }
+  sortStop=false; sortRunning=true;
+  sortComps=0; sortSwaps=0;
+  const arr=[...sortArray];
+  const names={bubble:'Bubble Sort O(n²)',selection:'Selection Sort O(n²)',insertion:'Insertion Sort O(n²)',merge:'Merge Sort O(n log n)',quick:'Quick Sort O(n log n)*',heap:'Heap Sort O(n log n)'};
+  document.getElementById('sort-info').textContent='▶ Running '+names[algo]+'...';
+  const t0=performance.now();
+  if(algo==='bubble') await bubbleSort(arr);
+  else if(algo==='selection') await selectionSort(arr);
+  else if(algo==='insertion') await insertionSort(arr);
+  else if(algo==='merge') await mergeSort(arr,0,arr.length-1);
+  else if(algo==='quick') await quickSort(arr,0,arr.length-1);
+  else if(algo==='heap') await heapSort(arr);
+  const elapsed=Math.round(performance.now()-t0);
+  document.getElementById('sort-time').textContent=elapsed+'ms';
+  if(!sortStop){ renderBars(arr,[],[...Array(arr.length).keys()]); document.getElementById('sort-info').textContent='✓ Sorted! '+names[algo]+' completed in '+elapsed+'ms'; }
+  sortArray=arr; sortRunning=false;
+}
+function stopSort(){ sortStop=true; sortRunning=false; document.getElementById('sort-info').textContent='■ Stopped.'; }
+
+async function bubbleSort(arr){
+  const n=arr.length;
+  for(let i=0;i<n-1&&!sortStop;i++){
+    for(let j=0;j<n-i-1&&!sortStop;j++){
+      sortComps++;
+      document.getElementById('sort-comps').textContent=sortComps;
+      renderBars(arr,[j,j+1],[...Array(n-i).keys()].map(x=>n-1-x+n-i));
+      if(arr[j]>arr[j+1]){ [arr[j],arr[j+1]]=[arr[j+1],arr[j]]; sortSwaps++; document.getElementById('sort-swaps').textContent=sortSwaps; }
+      await sleep(getDelay());
+    }
+  }
+}
+async function selectionSort(arr){
+  const n=arr.length;
+  for(let i=0;i<n&&!sortStop;i++){
+    let mi=i;
+    for(let j=i+1;j<n&&!sortStop;j++){
+      sortComps++; document.getElementById('sort-comps').textContent=sortComps;
+      renderBars(arr,[j,mi],[...Array(i).keys()]);
+      if(arr[j]<arr[mi]) mi=j;
+      await sleep(getDelay());
+    }
+    if(mi!==i){[arr[i],arr[mi]]=[arr[mi],arr[i]];sortSwaps++;document.getElementById('sort-swaps').textContent=sortSwaps;}
+  }
+}
+async function insertionSort(arr){
+  for(let i=1;i<arr.length&&!sortStop;i++){
+    let k=arr[i],j=i-1;
+    while(j>=0&&arr[j]>k&&!sortStop){
+      sortComps++; document.getElementById('sort-comps').textContent=sortComps;
+      arr[j+1]=arr[j]; j--;
+      renderBars(arr,[j+1,i],[]);
+      await sleep(getDelay());
+    }
+    arr[j+1]=k; sortSwaps++; document.getElementById('sort-swaps').textContent=sortSwaps;
+  }
+}
+async function mergeSort(arr,l,r){
+  if(sortStop||l>=r) return;
+  const m=Math.floor((l+r)/2);
+  await mergeSort(arr,l,m);
+  await mergeSort(arr,m+1,r);
+  await merge(arr,l,m,r);
+}
+async function merge(arr,l,m,r){
+  const L=arr.slice(l,m+1),R=arr.slice(m+1,r+1);
+  let i=0,j=0,k=l;
+  while(i<L.length&&j<R.length&&!sortStop){
+    sortComps++; document.getElementById('sort-comps').textContent=sortComps;
+    if(L[i]<=R[j]){arr[k++]=L[i++];}else{arr[k++]=R[j++];sortSwaps++;document.getElementById('sort-swaps').textContent=sortSwaps;}
+    renderBars(arr,[k-1],[]);
+    await sleep(getDelay());
+  }
+  while(i<L.length&&!sortStop){arr[k++]=L[i++];renderBars(arr,[k-1],[]);await sleep(getDelay());}
+  while(j<R.length&&!sortStop){arr[k++]=R[j++];renderBars(arr,[k-1],[]);await sleep(getDelay());}
+}
+async function quickSort(arr,lo,hi){
+  if(sortStop||lo>=hi) return;
+  let pi=await partition(arr,lo,hi);
+  await quickSort(arr,lo,pi-1);
+  await quickSort(arr,pi+1,hi);
+}
+async function partition(arr,lo,hi){
+  let pivot=arr[hi],i=lo-1;
+  for(let j=lo;j<hi&&!sortStop;j++){
+    sortComps++; document.getElementById('sort-comps').textContent=sortComps;
+    renderBars(arr,[j,hi],[]);
+    if(arr[j]<=pivot){i++;[arr[i],arr[j]]=[arr[j],arr[i]];sortSwaps++;document.getElementById('sort-swaps').textContent=sortSwaps;}
+    await sleep(getDelay());
+  }
+  [arr[i+1],arr[hi]]=[arr[hi],arr[i+1]];
+  return i+1;
+}
+async function heapSort(arr){
+  const n=arr.length;
+  for(let i=Math.floor(n/2)-1;i>=0&&!sortStop;i--) await heapify(arr,n,i);
+  for(let i=n-1;i>0&&!sortStop;i--){
+    [arr[0],arr[i]]=[arr[i],arr[0]]; sortSwaps++; document.getElementById('sort-swaps').textContent=sortSwaps;
+    await heapify(arr,i,0);
+  }
+}
+async function heapify(arr,n,i){
+  let l=2*i+1,r=2*i+2,largest=i;
+  if(l<n&&arr[l]>arr[largest]) largest=l;
+  if(r<n&&arr[r]>arr[largest]) largest=r;
+  if(largest!==i){
+    [arr[i],arr[largest]]=[arr[largest],arr[i]]; sortSwaps++; sortComps++;
+    document.getElementById('sort-swaps').textContent=sortSwaps;
+    document.getElementById('sort-comps').textContent=sortComps;
+    renderBars(arr,[i,largest],[]);
+    await sleep(getDelay());
+    await heapify(arr,n,largest);
+  }
+}
+
+// ─────────────────────────────────────────
+// 2. A* PATHFINDING
+// ─────────────────────────────────────────
+let pathInited=false, pathGrid=[], pathRows=20, pathCols=30;
+let pathStart={r:3,c:3}, pathEnd={r:16,c:26};
+let pathMode='wall', pathMouseDown=false;
+
+function initPath(){
+  pathInited=true;
+  const grid=document.getElementById('path-grid');
+  grid.style.gridTemplateColumns=`repeat(${pathCols},24px)`;
+  pathGrid=Array.from({length:pathRows},()=>Array(pathCols).fill(0));
+  grid.innerHTML='';
+  for(let r=0;r<pathRows;r++){
+    for(let c=0;c<pathCols;c++){
+      const cell=document.createElement('div');
+      cell.className='cell';
+      cell.dataset.r=r; cell.dataset.c=c;
+      cell.addEventListener('mousedown',e=>{pathMouseDown=true;pathCellClick(r,c);e.preventDefault();});
+      cell.addEventListener('mousemove',()=>{if(pathMouseDown)pathCellClick(r,c);});
+      cell.addEventListener('mouseup',()=>pathMouseDown=false);
+      grid.appendChild(cell);
+    }
+  }
+  document.addEventListener('mouseup',()=>pathMouseDown=false);
+  setPathMode('wall');
+  renderPath();
+}
+function setPathMode(m){
+  pathMode=m;
+  document.getElementById('path-mode-label').textContent=m.toUpperCase();
+  ['start','end','wall','erase'].forEach(x=>{
+    const b=document.getElementById('path-mode-'+x);
+    if(b) b.style.opacity=x===m?'1':'0.4';
+  });
+}
+function pathCellClick(r,c){
+  if(pathMode==='start'){pathStart={r,c};}
+  else if(pathMode==='end'){pathEnd={r,c};}
+  else if(pathMode==='wall') pathGrid[r][c]=1;
+  else if(pathMode==='erase') pathGrid[r][c]=0;
+  renderPath();
+}
+function renderPath(open=[],closed=[],path=[]){
+  const cells=document.getElementById('path-grid').children;
+  for(let r=0;r<pathRows;r++){
+    for(let c=0;c<pathCols;c++){
+      const cell=cells[r*pathCols+c];
+      cell.className='cell';
+      if(r===pathStart.r&&c===pathStart.c) cell.classList.add('start');
+      else if(r===pathEnd.r&&c===pathEnd.c) cell.classList.add('end');
+      else if(pathGrid[r][c]===1) cell.classList.add('wall');
+      else if(path.some(p=>p.r===r&&p.c===c)) cell.classList.add('path');
+      else if(open.some(p=>p.r===r&&p.c===c)) cell.classList.add('open');
+      else if(closed.some(p=>p.r===r&&p.c===c)) cell.classList.add('closed');
+    }
+  }
+}
+function clearPath(){
+  pathGrid=Array.from({length:pathRows},()=>Array(pathCols).fill(0));
+  renderPath();
+  document.getElementById('path-nodes').textContent='0';
+  document.getElementById('path-len').textContent='—';
+}
+function pathMaze(){
+  clearPath();
+  for(let r=0;r<pathRows;r++)
+    for(let c=0;c<pathCols;c++)
+      if(Math.random()<0.28 && !(r===pathStart.r&&c===pathStart.c) && !(r===pathEnd.r&&c===pathEnd.c))
+        pathGrid[r][c]=1;
+  renderPath();
+}
+async function runAStar(){
+  const heur=(a,b)=>Math.abs(a.r-b.r)+Math.abs(a.c-b.c);
+  let open=[{...pathStart,g:0,f:heur(pathStart,pathEnd),parent:null}];
+  let closed=[];
+  let found=null, steps=0;
+  while(open.length>0){
+    open.sort((a,b)=>a.f-b.f);
+    const cur=open.shift();
+    closed.push(cur);
+    steps++;
+    document.getElementById('path-nodes').textContent=steps;
+    if(cur.r===pathEnd.r&&cur.c===pathEnd.c){found=cur;break;}
+    for(const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=cur.r+dr, nc=cur.c+dc;
+      if(nr<0||nr>=pathRows||nc<0||nc>=pathCols) continue;
+      if(pathGrid[nr][nc]===1) continue;
+      if(closed.some(n=>n.r===nr&&n.c===nc)) continue;
+      const g=cur.g+1;
+      const existing=open.find(n=>n.r===nr&&n.c===nc);
+      if(!existing||g<existing.g){
+        const node={r:nr,c:nc,g,f:g+heur({r:nr,c:nc},pathEnd),parent:cur};
+        if(existing){existing.g=g;existing.f=node.f;existing.parent=cur;}
+        else open.push(node);
+      }
+    }
+    if(steps%5===0){renderPath(open,closed,[]);await sleep(8);}
+  }
+  if(found){
+    const path=[]; let n=found;
+    while(n){path.unshift(n);n=n.parent;}
+    renderPath([],[],path);
+    document.getElementById('path-len').textContent=path.length;
+  } else {
+    renderPath([],[],[]);
+    document.getElementById('path-len').textContent='No path!';
+  }
+}
+
+// ─────────────────────────────────────────
+// 3. NEURAL NETWORK
+// ─────────────────────────────────────────
+let nnInited=false, nnLayers=[3,5,4,5,2], nnWeights=[], nnActs=[], nnAnimTimer=null;
+
+function initNN(){
+  nnInited=true;
+  nnRandomWeights();
+  drawActivation('relu');
+}
+function nnRandomWeights(){
+  nnWeights=[];
+  for(let i=0;i<nnLayers.length-1;i++){
+    const w=[];
+    for(let j=0;j<nnLayers[i];j++){
+      w.push(Array.from({length:nnLayers[i+1]},()=>(Math.random()-0.5)*2));
+    }
+    nnWeights.push(w);
+  }
+  nnActs=nnLayers.map(l=>Array(l).fill(0));
+  drawNN();
+}
+function sigmoid(x){return 1/(1+Math.exp(-x));}
+function nnForwardPass(){
+  nnActs[0]=Array.from({length:nnLayers[0]},()=>Math.random());
+  for(let l=1;l<nnLayers.length;l++){
+    for(let n=0;n<nnLayers[l];n++){
+      let s=0;
+      for(let p=0;p<nnLayers[l-1];p++) s+=nnActs[l-1][p]*nnWeights[l-1][p][n];
+      nnActs[l][n]=sigmoid(s);
+    }
+  }
+  const loss=(1-nnActs[nnLayers.length-1][0]).toFixed(4);
+  document.getElementById('nn-loss').textContent=loss;
+  drawNN(true);
+}
+function drawNN(animate=false){
+  const canvas=document.getElementById('nn-canvas');
+  const W=canvas.offsetWidth||800; canvas.width=W; canvas.height=380;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,380);
+  const layerX=nnLayers.map((_,i)=>80+i*(W-160)/(nnLayers.length-1));
+  const nodeR=16;
+  // Draw weights
+  for(let l=0;l<nnLayers.length-1;l++){
+    for(let i=0;i<nnLayers[l];i++){
+      for(let j=0;j<nnLayers[l+1];j++){
+        const w=nnWeights[l]?.[i]?.[j]??0;
+        const y1=190-(nnLayers[l]-1)/2*50+i*50;
+        const y2=190-(nnLayers[l+1]-1)/2*50+j*50;
+        ctx.beginPath();
+        ctx.moveTo(layerX[l]+nodeR,y1);
+        ctx.lineTo(layerX[l+1]-nodeR,y2);
+        const alpha=Math.min(1,Math.abs(w)*0.6+0.1);
+        ctx.strokeStyle=w>0?`rgba(0,255,136,${alpha})`:`rgba(255,0,170,${alpha})`;
+        ctx.lineWidth=Math.abs(w)*2+0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  // Draw nodes
+  for(let l=0;l<nnLayers.length;l++){
+    for(let n=0;n<nnLayers[l];n++){
+      const x=layerX[l], y=190-(nnLayers[l]-1)/2*50+n*50;
+      const act=nnActs[l]?.[n]??0;
+      const alpha=animate?act:0.5;
+      ctx.beginPath(); ctx.arc(x,y,nodeR,0,Math.PI*2);
+      const grad=ctx.createRadialGradient(x,y,0,x,y,nodeR);
+      grad.addColorStop(0,`rgba(0,255,255,${alpha})`);
+      grad.addColorStop(1,`rgba(0,100,200,${alpha*0.3})`);
+      ctx.fillStyle=grad;
+      ctx.fill();
+      ctx.strokeStyle=`rgba(0,255,255,${0.3+alpha*0.7})`;
+      ctx.lineWidth=2; ctx.stroke();
+      ctx.fillStyle='white'; ctx.font='10px monospace'; ctx.textAlign='center';
+      if(animate) ctx.fillText(act.toFixed(2),x,y+4);
+      else ctx.fillText(n,x,y+4);
+    }
+  }
+  // Labels
+  ctx.fillStyle='#4a6080'; ctx.font='11px monospace'; ctx.textAlign='center';
+  const labels=['Input','','Hidden','','Output'];
+  nnLayers.forEach((_,i)=>{
+    ctx.fillText(labels[i]||'Hidden',layerX[i],370);
+    ctx.fillText(nnLayers[i]+' neurons',layerX[i],14);
+  });
+  const params=nnLayers.slice(0,-1).reduce((s,l,i)=>s+l*nnLayers[i+1]+nnLayers[i+1],0);
+  document.getElementById('nn-arch').textContent=nnLayers.join('→');
+  document.getElementById('nn-params').textContent=params.toLocaleString();
+}
+function nnAddLayer(){
+  if(nnLayers.length<8){ nnLayers.splice(nnLayers.length-1,0,Math.floor(Math.random()*5)+3); nnRandomWeights(); }
+}
+function nnRemoveLayer(){
+  if(nnLayers.length>3){ nnLayers.splice(nnLayers.length-2,1); nnRandomWeights(); }
+}
+function nnAnimate(){
+  if(nnAnimTimer){clearInterval(nnAnimTimer);nnAnimTimer=null;return;}
+  nnAnimTimer=setInterval(nnForwardPass,600);
+}
+function drawActivation(type){
+  const c=document.getElementById('activation-canvas');
+  const W=c.offsetWidth||400; c.width=W; c.height=160;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,W,160);
+  ctx.strokeStyle='#0a2040'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,80); ctx.lineTo(W,80); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,160); ctx.stroke();
+  const colors={relu:'#00ff88',sigmoid:'#bf00ff',tanh:'#00ffff',leaky:'#ff6600',softmax:'#ff00aa'};
+  ctx.strokeStyle=colors[type]; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  for(let px=0;px<W;px++){
+    const x=(px-W/2)/(W/8);
+    let y;
+    if(type==='relu') y=Math.max(0,x);
+    else if(type==='sigmoid') y=1/(1+Math.exp(-x));
+    else if(type==='tanh') y=Math.tanh(x);
+    else if(type==='leaky') y=x>=0?x:0.1*x;
+    else y=1/(1+Math.exp(-x));
+    const py=80-y*50;
+    px===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+  ctx.fillStyle=colors[type]; ctx.font='13px monospace'; ctx.textAlign='left';
+  const formulas={relu:'f(x) = max(0,x)',sigmoid:'f(x) = 1/(1+e⁻ˣ)',tanh:'f(x) = tanh(x)',leaky:'f(x) = max(0.1x,x)',softmax:'f(x) = eˣ/Σeˣ'};
+  ctx.fillText(formulas[type],12,20);
+}
+window.addEventListener('resize',()=>{ if(nnInited)drawNN(); });
+
+// ─────────────────────────────────────────
+// 4. FRACTAL EXPLORER
+// ─────────────────────────────────────────
+let fractalInited=false, fractalType='mandelbrot';
+let fxMin=-2.5,fxMax=1,fyMin=-1.25,fyMax=1.25;
+
+function initFractal(){
+  fractalInited=true;
+  const c=document.getElementById('fractal-canvas');
+  c.addEventListener('click',fractalZoomIn);
+  c.addEventListener('contextmenu',e=>{e.preventDefault();fractalZoomOut(e);});
+  renderFractal();
+}
+function resetFractal(){
+  fxMin=-2.5;fxMax=1;fyMin=-1.25;fyMax=1.25;
+  document.getElementById('fractal-zoom').textContent='1×';
+  document.getElementById('fractal-center').textContent='(-0.5, 0)';
+  document.getElementById('fractal-type-label').textContent=fractalType.charAt(0).toUpperCase()+fractalType.slice(1);
+  renderFractal();
+}
+function fractalZoomIn(e){
+  const c=document.getElementById('fractal-canvas');
+  const rect=c.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)/rect.width;
+  const my=(e.clientY-rect.top)/rect.height;
+  const cx=fxMin+mx*(fxMax-fxMin), cy=fyMin+my*(fyMax-fyMin);
+  const w=(fxMax-fxMin)*0.4, h=(fyMax-fyMin)*0.4;
+  fxMin=cx-w/2;fxMax=cx+w/2;fyMin=cy-h/2;fyMax=cy+h/2;
+  const zoom=Math.round(4/(fxMax-fxMin));
+  document.getElementById('fractal-zoom').textContent=zoom+'×';
+  document.getElementById('fractal-center').textContent=`(${cx.toFixed(4)}, ${cy.toFixed(4)})`;
+  renderFractal();
+}
+function fractalZoomOut(){
+  const cx=(fxMin+fxMax)/2, cy=(fyMin+fyMax)/2;
+  const w=(fxMax-fxMin)*2.5, h=(fyMax-fyMin)*2.5;
+  fxMin=cx-w/2;fxMax=cx+w/2;fyMin=cy-h/2;fyMax=cy+h/2;
+  renderFractal();
+}
+function renderFractal(){
+  const c=document.getElementById('fractal-canvas');
+  const W=c.offsetWidth||800; c.width=W; c.height=450;
+  const ctx=c.getContext('2d');
+  const maxIter=parseInt(document.getElementById('iter-slider').value);
+  const palette=document.getElementById('fractal-palette').value;
+  const img=ctx.createImageData(W,450);
+  for(let px=0;px<W;px++){
+    for(let py=0;py<450;py++){
+      const x0=fxMin+px*(fxMax-fxMin)/W;
+      const y0=fyMin+py*(fyMax-fyMin)/450;
+      let x=0,y=0,iter=0;
+      const cx2=fractalType==='julia'?-0.7:x0;
+      const cy2=fractalType==='julia'?0.27015:y0;
+      let x2=fractalType==='julia'?x0:0;
+      let y2=fractalType==='julia'?y0:0;
+      while(x2*x2+y2*y2<=4&&iter<maxIter){
+        if(fractalType==='burning'){
+          const xt=x2*x2-y2*y2+cx2;
+          y2=Math.abs(2*x2*y2)+cy2;
+          x2=xt;
+        } else {
+          const xt=x2*x2-y2*y2+cx2;
+          y2=2*x2*y2+cy2;
+          x2=xt;
+        }
+        iter++;
+      }
+      const idx=(py*W+px)*4;
+      if(iter===maxIter){img.data[idx]=0;img.data[idx+1]=0;img.data[idx+2]=0;}
+      else{
+        const t=iter/maxIter;
+        const [r,g,b]=fractalColor(t,palette);
+        img.data[idx]=r;img.data[idx+1]=g;img.data[idx+2]=b;
+      }
+      img.data[(py*W+px)*4+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+function fractalColor(t,palette){
+  if(palette==='fire') return [Math.floor(t*255),Math.floor(t*t*200),Math.floor(t*t*t*100)];
+  if(palette==='ocean') return [0,Math.floor(t*100+50),Math.floor(t*200+55)];
+  if(palette==='neon'){
+    const h=t*360;
+    return hsl2rgb(h,1,t*0.5+0.2);
+  }
+  if(palette==='grayscale'){const v=Math.floor(t*255);return[v,v,v];}
+  const h=(t*720)%360;
+  return hsl2rgb(h,0.9,0.5);
+}
+function hsl2rgb(h,s,l){
+  const c=(1-Math.abs(2*l-1))*s, x=c*(1-Math.abs((h/60)%2-1)), m=l-c/2;
+  let r=0,g=0,b=0;
+  if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}
+  else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}
+  return[Math.floor((r+m)*255),Math.floor((g+m)*255),Math.floor((b+m)*255)];
+}
+
+// ─────────────────────────────────────────
+// 5. CRYPTOGRAPHY
+// ─────────────────────────────────────────
+const MORSE={'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',' ':'/'};
+
+function cryptoProcess(){
+  const input=document.getElementById('crypto-input').value;
+  const type=document.getElementById('cipher-type').value;
+  const key=document.getElementById('cipher-key').value;
+  let output='';
+  if(type==='caesar'){
+    const shift=(parseInt(key)||3)%26;
+    output=input.split('').map(c=>{
+      if(/[a-zA-Z]/.test(c)){const base=c<='Z'?65:97;return String.fromCharCode((c.charCodeAt(0)-base+shift+26)%26+base);}
+      return c;
+    }).join('');
+  } else if(type==='vigenere'){
+    const k=(key||'key').toUpperCase().replace(/[^A-Z]/g,'');
+    let ki=0;
+    output=input.split('').map(c=>{
+      if(/[a-zA-Z]/.test(c)){
+        const base=c<='Z'?65:97;
+        const shift=k[ki%k.length].charCodeAt(0)-65; ki++;
+        return String.fromCharCode((c.charCodeAt(0)-base+shift+26)%26+base);
+      }
+      return c;
+    }).join('');
+  } else if(type==='atbash'){
+    output=input.split('').map(c=>{
+      if(/[a-zA-Z]/.test(c)){const base=c<='Z'?65:97;return String.fromCharCode(25-(c.charCodeAt(0)-base)+base);}
+      return c;
+    }).join('');
+  } else if(type==='rot13'){
+    output=input.replace(/[a-zA-Z]/g,c=>{const base=c<='Z'?65:97;return String.fromCharCode((c.charCodeAt(0)-base+13)%26+base);});
+  } else if(type==='rail'){
+    const rails=Math.max(2,parseInt(key)||3);
+    const r=Array.from({length:rails},()=>'');
+    let row=0,dir=1;
+    for(const c of input){r[row]+=c;if(row===rails-1)dir=-1;else if(row===0)dir=1;row+=dir;}
+    output=r.join('');
+  } else if(type==='b64'){
+    try{output=btoa(unescape(encodeURIComponent(input)));}catch(e){output='[invalid]';}
+  } else if(type==='bin'){
+    output=input.split('').map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ');
+  } else if(type==='hex'){
+    output=input.split('').map(c=>c.charCodeAt(0).toString(16).padStart(2,'0').toUpperCase()).join(' ');
+  } else if(type==='morse'){
+    output=input.toUpperCase().split('').map(c=>MORSE[c]||'?').join(' ');
+  } else if(type==='reverse'){
+    output=input.split('').reverse().join('');
+  }
+  document.getElementById('crypto-output').value=output;
+  updateFreq();
+}
+function swapCipherIO(){
+  const i=document.getElementById('crypto-input').value;
+  const o=document.getElementById('crypto-output').value;
+  document.getElementById('crypto-input').value=o;
+  cryptoProcess();
+}
+function cryptoCopyOutput(){
+  navigator.clipboard.writeText(document.getElementById('crypto-output').value);
+}
+function updateFreq(){
+  const c=document.getElementById('freq-canvas');
+  const W=c.offsetWidth||400; c.width=W; c.height=160;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,W,160);
+  const text=document.getElementById('crypto-input').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const freq={};
+  for(const ch of text) freq[ch]=(freq[ch]||0)+1;
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const maxF=Math.max(...letters.split('').map(l=>freq[l]||0),1);
+  const bw=W/26-1;
+  letters.split('').forEach((l,i)=>{
+    const h=((freq[l]||0)/maxF)*120;
+    const x=i*(bw+1);
+    const grad=ctx.createLinearGradient(0,140-h,0,140);
+    grad.addColorStop(0,'#00ffff');
+    grad.addColorStop(1,'#0040a0');
+    ctx.fillStyle=grad;
+    ctx.fillRect(x,140-h,bw,h);
+    ctx.fillStyle='#3a5070'; ctx.font='9px monospace'; ctx.textAlign='center';
+    ctx.fillText(l,x+bw/2,155);
+  });
+}
+function updateHashes(){
+  const s=document.getElementById('hash-input').value;
+  document.getElementById('h-djb2').textContent='0x'+djb2(s).toString(16).toUpperCase().padStart(8,'0');
+  document.getElementById('h-fnv').textContent='0x'+fnv1a(s).toString(16).toUpperCase().padStart(8,'0');
+  document.getElementById('h-sdbm').textContent='0x'+sdbm(s).toString(16).toUpperCase().padStart(8,'0');
+  const sum=s.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  document.getElementById('h-sum').textContent=sum+' (dec)';
+}
+function djb2(s){let h=5381;for(const c of s)h=((h<<5)+h)+c.charCodeAt(0)>>>0;return h;}
+function fnv1a(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=(h*16777619)>>>0;}return h;}
+function sdbm(s){let h=0;for(const c of s)h=c.charCodeAt(0)+(h<<6)+(h<<16)-h>>>0;return h;}
+
+// ─────────────────────────────────────────
+// 6. BIG-O
+// ─────────────────────────────────────────
+let bigoInited=false;
+const bigoVisible={O1:true,Ologn:true,On:true,Onlogn:true,On2:true,On3:false,O2n:false,Onf:false};
+const bigoColors={O1:'#00ff88',Ologn:'#00ffff',On:'#8888ff',Onlogn:'#bf00ff',On2:'#ff6600',On3:'#ff3333',O2n:'#ffff00',Onf:'#ff4444'};
+const bigoFuncs={O1:n=>1,Ologn:n=>Math.log2(n),On:n=>n,Onlogn:n=>n*Math.log2(n),On2:n=>n*n,On3:n=>n*n*n,O2n:n=>Math.pow(2,n),Onf:n=>{let f=1;for(let i=2;i<=n;i++)f*=i;return f;}};
+const bigoLabels={O1:'O(1)',Ologn:'O(log n)',On:'O(n)',Onlogn:'O(n log n)',On2:'O(n²)',On3:'O(n³)',O2n:'O(2ⁿ)',Onf:'O(n!)'};
+
+function initBigo(){ bigoInited=true; drawBigo(); }
+function bigoToggle(key){
+  bigoVisible[key]=!bigoVisible[key];
+  const btn=document.getElementById('btn-'+key);
+  btn.style.opacity=bigoVisible[key]?'1':'0.3';
+  drawBigo();
+}
+function drawBigo(){
+  const c=document.getElementById('bigo-canvas');
+  const W=c.offsetWidth||800; c.width=W; c.height=380;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,W,380);
+  const pad=50, cW=W-pad*2, cH=380-pad*2;
+  const maxN=30;
+  // grid
+  ctx.strokeStyle='#0a1628'; ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y=pad+i*cH/5;
+    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();
+  }
+  // axes
+  ctx.strokeStyle='#1a3060'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,pad+cH);ctx.lineTo(pad+cW,pad+cH);ctx.stroke();
+  ctx.fillStyle='#2a4060';ctx.font='11px monospace';ctx.textAlign='center';
+  ctx.fillText('n',pad+cW/2,pad+cH+35);
+  ctx.save();ctx.translate(15,pad+cH/2);ctx.rotate(-Math.PI/2);ctx.fillText('Operations',0,0);ctx.restore();
+  // find max visible value at n=maxN
+  let maxV=1;
+  Object.keys(bigoVisible).forEach(k=>{
+    if(bigoVisible[k]){const v=bigoFuncs[k](maxN);if(isFinite(v)&&v>maxV)maxV=Math.min(v,1e6);}
+  });
+  // draw each
+  Object.keys(bigoVisible).forEach(k=>{
+    if(!bigoVisible[k]) return;
+    ctx.strokeStyle=bigoColors[k]; ctx.lineWidth=2.5;
+    ctx.beginPath(); let started=false;
+    for(let ni=1;ni<=maxN;ni++){
+      const v=Math.min(bigoFuncs[k](ni),maxV);
+      const x=pad+((ni-1)/(maxN-1))*cW;
+      const y=pad+cH-(v/maxV)*cH;
+      if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // label at end
+    const endV=Math.min(bigoFuncs[k](maxN),maxV);
+    const endY=pad+cH-(endV/maxV)*cH;
+    ctx.fillStyle=bigoColors[k];ctx.font='bold 11px monospace';ctx.textAlign='left';
+    ctx.fillText(bigoLabels[k],W-pad+4,Math.max(pad+10,Math.min(endY+4,pad+cH)));
+  });
+  // x axis labels
+  ctx.fillStyle='#2a4060';ctx.font='10px monospace';ctx.textAlign='center';
+  [5,10,15,20,25,30].forEach(n=>{
+    const x=pad+((n-1)/(maxN-1))*cW;
+    ctx.fillText(n,x,pad+cH+15);
+  });
+}
+
+// ─────────────────────────────────────────
+// 7. PARTICLES
+// ─────────────────────────────────────────
+let particlesInited=false, particles=[], particleMode='attract';
+let gravStrength=0.5, friction=0.99, particleRAF=null;
+let lastFrameTime=0, particleFPS=60;
+
+function initParticles(){
+  particlesInited=true;
+  const c=document.getElementById('particle-canvas');
+  c.addEventListener('click',e=>{
+    const r=c.getBoundingClientRect();
+    addParticlesAt(e.clientX-r.left,e.clientY-r.top,5);
+  });
+  addParticleBurst();
+  particleLoop();
+}
+function addParticlesAt(x,y,count){
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=Math.random()*4+1;
+    const hue=Math.random()*360;
+    particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      r:Math.random()*4+2,hue,alpha:1,life:1});
+  }
+  document.getElementById('particle-count').textContent=particles.length;
+}
+function addParticleBurst(){
+  const c=document.getElementById('particle-canvas');
+  const cx=c.width/2||400, cy=c.height/2||225;
+  for(let i=0;i<80;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=Math.random()*6+2;
+    const hue=Math.floor(Math.random()*360);
+    particles.push({x:cx+Math.random()*100-50,y:cy+Math.random()*100-50,
+      vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      r:Math.random()*5+2,hue,alpha:1,life:1});
+  }
+  document.getElementById('particle-count').textContent=particles.length;
+}
+function explodeParticles(){
+  for(const p of particles){
+    const angle=Math.random()*Math.PI*2;
+    p.vx+=Math.cos(angle)*8;
+    p.vy+=Math.sin(angle)*8;
+  }
+}
+function clearParticles(){particles=[];document.getElementById('particle-count').textContent=0;}
+function updateParticleMode(){document.getElementById('particle-mode-label').textContent=particleMode;}
+
+function particleLoop(ts=0){
+  particleRAF=requestAnimationFrame(particleLoop);
+  const dt=ts-lastFrameTime;
+  if(dt<16){return;}
+  particleFPS=Math.round(1000/Math.max(dt,1));
+  document.getElementById('particle-fps').textContent=particleFPS;
+  lastFrameTime=ts;
+  const c=document.getElementById('particle-canvas');
+  if(!c.width) return;
+  const W=c.offsetWidth||800; c.width=W; c.height=450;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='rgba(2,4,8,0.15)';
+  ctx.fillRect(0,0,W,450);
+  const cx=W/2,cy=225;
+  // update
+  for(const p of particles){
+    if(particleMode==='attract'){
+      const dx=cx-p.x,dy=cy-p.y;
+      const d=Math.sqrt(dx*dx+dy*dy)+1;
+      p.vx+=dx/d*gravStrength;
+      p.vy+=dy/d*gravStrength;
+    } else if(particleMode==='repel'){
+      const dx=p.x-cx,dy=p.y-cy;
+      const d=Math.sqrt(dx*dx+dy*dy)+1;
+      p.vx+=dx/d*gravStrength;
+      p.vy+=dy/d*gravStrength;
+    } else if(particleMode==='orbit'){
+      const dx=p.x-cx,dy=p.y-cy;
+      const d=Math.sqrt(dx*dx+dy*dy)+1;
+      p.vx+=-dy/d*gravStrength*1.5;
+      p.vy+=dx/d*gravStrength*1.5;
+      p.vx-=dx/d*0.05;
+      p.vy-=dy/d*0.05;
+    }
+    p.vx*=friction; p.vy*=friction;
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0){p.x=0;p.vx*=-0.8;}
+    if(p.x>W){p.x=W;p.vx*=-0.8;}
+    if(p.y<0){p.y=0;p.vy*=-0.8;}
+    if(p.y>450){p.y=450;p.vy*=-0.8;}
+    // draw
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${p.hue},100%,65%,0.9)`;
+    ctx.fill();
+    // glow
+    const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+    g.addColorStop(0,`hsla(${p.hue},100%,65%,0.3)`);
+    g.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);
+    ctx.fillStyle=g; ctx.fill();
+  }
+  // draw connections
+  if(particles.length<200){
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<Math.min(i+8,particles.length);j++){
+        const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<80){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          const alpha=(1-d/80)*0.3;
+          ctx.strokeStyle=`rgba(0,200,255,${alpha})`;
+          ctx.lineWidth=0.8;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+  // center dot
+  ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2);
+  ctx.fillStyle=particleMode==='attract'?'rgba(0,255,136,0.6)':particleMode==='repel'?'rgba(255,0,100,0.6)':'rgba(255,200,0,0.6)';
+  ctx.fill();
+}
+
+// ─────────────────────────────────────────
+// 8. DATA STRUCTURES — BST
+// ─────────────────────────────────────────
+let dsInited=false, dsRoot=null, traversal='inorder', dsSearchNode=null;
+
+class BSTNode{constructor(v){this.val=v;this.left=null;this.right=null;this.x=0;this.y=0;this.highlight=false;}}
+
+function initDS(){ dsInited=true; dsRandom(); }
+function dsInsert(){
+  const v=parseInt(document.getElementById('ds-input').value);
+  if(isNaN(v)||v<1||v>999) return;
+  dsRoot=bstInsert(dsRoot,v);
+  dsUpdateInfo(); drawDS();
+}
+function bstInsert(node,v){
+  if(!node) return new BSTNode(v);
+  if(v<node.val) node.left=bstInsert(node.left,v);
+  else if(v>node.val) node.right=bstInsert(node.right,v);
+  return node;
+}
+function dsDelete(){
+  const v=parseInt(document.getElementById('ds-input').value);
+  if(isNaN(v)) return;
+  dsRoot=bstDelete(dsRoot,v);
+  dsUpdateInfo(); drawDS();
+}
+function bstDelete(node,v){
+  if(!node) return null;
+  if(v<node.val) node.left=bstDelete(node.left,v);
+  else if(v>node.val) node.right=bstDelete(node.right,v);
+  else {
+    if(!node.left) return node.right;
+    if(!node.right) return node.left;
+    let succ=node.right;
+    while(succ.left) succ=succ.left;
+    node.val=succ.val;
+    node.right=bstDelete(node.right,succ.val);
+  }
+  return node;
+}
+async function dsSearch(){
+  const v=parseInt(document.getElementById('ds-input').value);
+  if(isNaN(v)) return;
+  dsSearchNode=null;
+  let cur=dsRoot;
+  while(cur){
+    cur.highlight=true; drawDS();
+    await sleep(300);
+    cur.highlight=false;
+    if(v===cur.val){cur.highlight=true;dsSearchNode=cur;drawDS();return;}
+    cur=v<cur.val?cur.left:cur.right;
+  }
+  drawDS();
+}
+function dsRandom(){
+  dsRoot=null;
+  const vals=Array.from({length:12},()=>Math.floor(Math.random()*90)+10);
+  new Set(vals).forEach(v=>dsRoot=bstInsert(dsRoot,v));
+  dsUpdateInfo(); drawDS();
+}
+function dsClear(){ dsRoot=null; dsUpdateInfo(); drawDS(); document.getElementById('ds-traversal-out').textContent='—'; }
+
+function dsTraverse(){
+  const result=[];
+  if(traversal==='inorder') inorder(dsRoot,result);
+  else if(traversal==='preorder') preorder(dsRoot,result);
+  else if(traversal==='postorder') postorder(dsRoot,result);
+  else { // bfs
+    if(!dsRoot) return;
+    const q=[dsRoot];
+    while(q.length){const n=q.shift();result.push(n.val);if(n.left)q.push(n.left);if(n.right)q.push(n.right);}
+  }
+  document.getElementById('ds-traversal-out').textContent=result.join(' → ');
+}
+function inorder(n,r){if(!n)return;inorder(n.left,r);r.push(n.val);inorder(n.right,r);}
+function preorder(n,r){if(!n)return;r.push(n.val);preorder(n.left,r);preorder(n.right,r);}
+function postorder(n,r){if(!n)return;postorder(n.left,r);postorder(n.right,r);r.push(n.val);}
+
+function bstHeight(n){if(!n)return 0;return 1+Math.max(bstHeight(n.left),bstHeight(n.right));}
+function bstCount(n){if(!n)return 0;return 1+bstCount(n.left)+bstCount(n.right);}
+
+function dsUpdateInfo(){
+  document.getElementById('ds-count').textContent=bstCount(dsRoot);
+  document.getElementById('ds-height').textContent=bstHeight(dsRoot);
+}
+
+function dsAssignPositions(node,x,y,offset){
+  if(!node) return;
+  node.x=x; node.y=y;
+  dsAssignPositions(node.left,x-offset,y+70,offset/2);
+  dsAssignPositions(node.right,x+offset,y+70,offset/2);
+}
+
+function drawDS(){
+  const c=document.getElementById('ds-canvas');
+  const W=c.offsetWidth||800; c.width=W; c.height=380;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,W,380);
+  if(!dsRoot){
+    ctx.fillStyle='#1a3050';ctx.font='16px monospace';ctx.textAlign='center';
+    ctx.fillText('Empty tree — insert values below',W/2,190);
+    return;
+  }
+  dsAssignPositions(dsRoot,W/2,40,W/4);
+  // edges
+  function drawEdges(node){
+    if(!node) return;
+    if(node.left){
+      ctx.beginPath();ctx.moveTo(node.x,node.y);ctx.lineTo(node.left.x,node.left.y);
+      ctx.strokeStyle='#0a2040';ctx.lineWidth=1.5;ctx.stroke();
+      drawEdges(node.left);
+    }
+    if(node.right){
+      ctx.beginPath();ctx.moveTo(node.x,node.y);ctx.lineTo(node.right.x,node.right.y);
+      ctx.strokeStyle='#0a2040';ctx.lineWidth=1.5;ctx.stroke();
+      drawEdges(node.right);
+    }
+  }
+  drawEdges(dsRoot);
+  // nodes
+  function drawNode(node){
+    if(!node) return;
+    ctx.beginPath();ctx.arc(node.x,node.y,18,0,Math.PI*2);
+    const g=ctx.createRadialGradient(node.x,node.y,0,node.x,node.y,18);
+    if(node.highlight){
+      g.addColorStop(0,'#ffff00');g.addColorStop(1,'#806600');
+    } else {
+      g.addColorStop(0,'#00aaff');g.addColorStop(1,'#003060');
+    }
+    ctx.fillStyle=g;ctx.fill();
+    ctx.strokeStyle=node.highlight?'#ffff00':'#0066cc';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='white';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(node.val,node.x,node.y);
+    ctx.textBaseline='alphabetic';
+    drawNode(node.left);drawNode(node.right);
+  }
+  drawNode(dsRoot);
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+window.addEventListener('resize',()=>{
+  if(bigoInited) drawBigo();
+  if(dsInited) drawDS();
+  if(nnInited) drawNN();
+  if(fractalInited) renderFractal();
+});
+
+// Auto-init sort on load
+setTimeout(()=>{
+  sortGenArray();
+  cryptoProcess();
+},100);
+
+</script>
+</body>
+</html>
